@@ -16,6 +16,8 @@ struct ContentView: View {
     let lightOrange = Color(red: 255/255, green: 243/255, blue: 231/255)
     let darkOrange = Color(red: 127/255, green: 68/255, blue: 8/255)
     
+    @State private var breathe = false
+    
     var body: some View {
         VStack {
             HStack {
@@ -44,10 +46,20 @@ struct ContentView: View {
                     isOn.toggle()
                     
                 } label: {
-                    Image(systemName: isOn ? "stop.circle.fill" : "microphone.circle.fill")
+                    Image(systemName: "microphone.circle.fill")
                         .font(.system(size: 118))
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(.orange, colorScheme == .dark ? darkOrange : lightOrange)
+                        .foregroundStyle(isOn ? lightOrange : .orange, isOn ? .orange : (colorScheme == .dark ? darkOrange : lightOrange))
+                        .scaleEffect(isOn && breathe ? 1.1 : 1.0)
+                        .onChange(of: isOn) { oldValue, newValue in
+                            if newValue {
+                                withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) {
+                                    breathe = true
+                                }
+                            } else {
+                                breathe = false
+                            }
+                        }
                 }
                 .onChange(of: isOn) { oldValue, newValue in
                     if newValue {
