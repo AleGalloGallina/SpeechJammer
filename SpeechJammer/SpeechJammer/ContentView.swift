@@ -18,6 +18,8 @@ struct ContentView: View {
     let darkOrange = Color(red: 127/255, green: 68/255, blue: 8/255)
     
     @State private var breathe = false
+    @State private var isMouthOpen = false
+    @State private var animationTimer: Timer?
     
     var body: some View {
         VStack {
@@ -67,8 +69,10 @@ struct ContentView: View {
                     if newValue {
                         audio.delayTime = delay
                         audio.start()
+                        startMouthAnimation()
                     }else {
                         audio.stop()
+                        stopMouthAnimation()
                     }
                 }
             }
@@ -87,7 +91,7 @@ struct ContentView: View {
 //            .padding(.horizontal)
             Spacer()
             ZStack(alignment: .bottom) {
-                Image("boca_cerrada")
+                Image(isOn && isMouthOpen ? "boca_abierta" : "boca_cerrada")
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
@@ -111,6 +115,10 @@ struct ContentView: View {
         .onDisappear {
             audio.stop()
             isOn = false
+            stopMouthAnimation()
+        }
+        .onAppear {
+            newTongueTwister()
         }
     }
     
@@ -118,6 +126,20 @@ struct ContentView: View {
         let amount = tongueTwisters.count
         let randomNumber = Int.random(in: 0..<amount)
         currentTongueTwister = tongueTwisters[randomNumber]
+    }
+    private func startMouthAnimation(){
+        stopMouthAnimation()
+        isMouthOpen = false
+        
+        animationTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: true) { _ in
+            isMouthOpen.toggle()
+        }
+    }
+    
+    private func stopMouthAnimation(){
+        animationTimer?.invalidate()
+        animationTimer = nil
+        isMouthOpen = false
     }
 }
 
