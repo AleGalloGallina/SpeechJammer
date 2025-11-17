@@ -21,6 +21,9 @@ struct ContentView: View {
     @State private var isMouthOpen = false
     @State private var animationTimer: Timer?
     
+    let delays: [Double] = [0, 0.25, 0.50, 0.75, 1.00]
+    @State private var selectedDelay: Double = 0.25
+    
     var body: some View {
         VStack {
             HStack {
@@ -64,6 +67,21 @@ struct ContentView: View {
                             }
                         }
                         .popoverTip(TipManager().useHeadphones, arrowEdge: .top)
+                        .contextMenu {
+                            ForEach(delays, id: \.self) { menuDelay in
+                                Button {
+                                    selectedDelay = menuDelay
+                                    delay = menuDelay
+                                } label: {
+                                    HStack {
+                                        Text("\(menuDelay, specifier: "%.2f") s")
+                                        if menuDelay == selectedDelay {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                }
+                            }
+                        }
                 }
                 .onChange(of: isOn) { oldValue, newValue in
                     if newValue {
