@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -60,6 +61,7 @@ struct ContentView: View {
                                 breathe = false
                             }
                         }
+                        .popoverTip(TipManager().useHeadphones, arrowEdge: .top)
                 }
                 .onChange(of: isOn) { oldValue, newValue in
                     if newValue {
