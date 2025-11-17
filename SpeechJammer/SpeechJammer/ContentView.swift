@@ -21,7 +21,7 @@ struct ContentView: View {
     @State private var isMouthOpen = false
     @State private var animationTimer: Timer?
     
-    let delays: [Double] = [0, 0.25, 0.50, 0.75, 1.00]
+    let delays: [Double] = [0, 0.10, 0.15, 0.20, 0.25]
     @State private var selectedDelay: Double = 0.25
     
     var body: some View {
